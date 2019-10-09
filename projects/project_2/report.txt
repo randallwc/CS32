@@ -1,0 +1,366 @@
+a description of the design of your doubly-linked list implementation. (A couple of sentences will probably suffice, perhaps with a picture of a typical Sequence and an empty Sequence. Is the list circular? Does it have a dummy node? What's in your list nodes?)
+
+My doubly-linked list has a head pointer and a tail pointer.  The head points to the first item in the list and the tail points to the last item.  Each item has a next and previous pointer that makes it easier to go forwards and backwards in the list.
+
+pseudocode for non-trivial algorithms (e.g., Sequence::remove and interleave).
+
+Sequence::Sequence(const Sequence& other)
+
+//if other is nullptr initialize head and tail to nullptr and size to 0 and return
+//otherwise set this's head and tail to nullptr and set its size to 0
+//then loop through up to other's size and get values from other and insert them into this
+
+Sequence& Sequence::operator= (const Sequence& other)
+
+//if other is this then return this
+//otherwise create a temp sequence with other's values with the copy constructor
+//swap value from other to this
+//return this
+
+Sequence::~Sequence()
+
+//if its empty then set head and tail to nullptr and m_size to 0
+//otherwise loop from head to nullptr deleting with a temp pointer to each value
+
+int Sequence::insert (int pos, const ItemType& value)
+
+//if pos is greater than m_size or if pos is less than 0 return -1
+//if pos is 0 and the head is nullptr then make a new node and set head and tail to equal this new node and set it's next and previous to nullptr
+//if pos is equal to size then make a new node and set its previous to tail and its next to nullptr then set tail equal to it
+//if pos is 0 and head isn't nullptr then make a new node at the beginning of the list and set its previous to nullptr and next to the previous head
+//if pos isn't 0 and head isn't nullptr then make a new node and insert it into the list breaking the next's and previous's of the surrounding nodes
+//increment m_size
+//return pos
+
+int Sequence::insert (const ItemType& value)
+
+//if this is empty then use insert at position 0
+//create a temp pointer and move it down the linked list until value <= the pointer's data
+//then insert at this position
+//return position
+
+bool Sequence::erase (int pos)
+{
+
+//if head or tail is nullptr or if pos is greater than or equal to size or if it is less than zero or if size is zero return false
+//if you are deleting the head node of a size = 1 list then set head and tail to null and set size equal to zero and decrease size then return
+//if you are deleting the head pointer of a non size = 1 list then set the second nodes previous to null and point head to it and delete the old head and decrease size then return
+//if you are deleting the tail set the second to last's next to null and point tail to it and delete the old tail with a pointer and decrease size then return
+//if you are deleting in the middle then loop to the position with a temp pointer
+//make the value after it point to the value before the pointer and vice versa then delete the pointer
+//decrease size then return;
+
+int Sequence::remove (const ItemType& value)
+
+//create a temp counter variable
+//make a while loop that loops until Sequence::find(value) equals -1 (when it can't find the value in the list)
+//each loop use Sequence::erase to erase at the value returned from the find function
+//increment count
+//return the counter variable
+
+int Sequence::find (const ItemType& value) const
+
+//return -1 if empty return -1
+//make a position int
+//loop through until either a temp ptr's data equals value or the pointer is null pointer 
+//increment position in loop
+//if position is equal to size return -1
+//otherwise return position
+
+void Sequence::swap (Sequence& other)
+
+//make a temp head and tail pointer
+//make a temp int
+//set temp head to head and temp tail to tail
+//make this head equal to other head
+//make this tail equal to other tail
+//make this size equal to other size
+// put all temp values into other 
+
+int subsequence(const Sequence& seq1, const Sequence& seq2)
+
+//if seq2 is greater then seq1 or seq1 or seq2 is empty then return -1
+//make two objects of item type
+//loop to the size of seq1 - size of seq2 - the index is < 0 then break from the loop
+//get values from the index position of seq1 and the 0 position of seq2
+//if the values are equal then loop through seq1 from the first index to the length of seq2
+//and compare those values with the values from index 0 to size of seq2
+//if any value doesn't equal then break from this loop and continue looping through seq1
+//if the second index equals size of seq2 -1 then return the first index
+//if it loops through both loops and doesn't find anything return -1
+
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result)
+
+//if seq1 is empty return seq2
+//if seq2 is empty return seq1
+//make a size variable equal to size of seq1 + seq2
+//loop to value of size
+//if seq1.get at index returns a value then insert it into a temp Sequence at a position value and increment the position value
+//if seq2.get at index returns a value then insert it into a temp Sequence at a position value and increment the position value
+//at the end use the =operator to set result = to temp
+
+a list of test cases that would thoroughly test the functions. Be sure to indicate the purpose of the tests. For example, here's the beginning of a presentation in the form of code:
+
+ItemType was a type alias for int.
+#include <cassert>
+Int main()
+{
+// default constructor
+    Sequence a;
+//test empty
+    assert(a.empty() == 1);
+//test insert with two conditions
+    assert(a.insert(-1, 1000000) == -1);
+//test size
+    assert(a.size() == 0);
+    assert(a.insert(1 , 2000000) == -1);
+    assert(a.size() == 0);
+    assert(a.empty() == 1);
+
+    assert(a.insert(0 , 1) == 0);
+    assert(a.insert(1 , 2) == 1);
+    assert(a.insert(2 , 3) == 2);
+    assert(a.insert(3 , 4) == 3);
+    assert(a.insert(4 , 5) == 4);
+    assert(a.insert(5 , 6) == 5);
+    assert(a.insert(6 , 7) == 6);
+    assert(a.size() == 7);
+
+    a.insert(3 , 420);
+    assert(a.size() == 8);
+
+    assert(a.insert(8, 555)==8);
+    assert(a.size() == 9);
+
+//test get
+    ItemType x = 500;
+    assert(a.get(-1, x) == 0);
+    assert(x == 500);
+    assert(a.get(0, x) == 1);
+    assert(x == 1);
+    assert(a.get(1, x) == 1);
+    assert(x == 2);
+    assert(a.get(3, x) == 1);
+    assert(x == 420);
+    assert(a.get(8, x) == 1);
+    assert(x == 555);
+    assert(a.get(9, x) == 0);
+    assert(x == 555);
+
+    assert(a.empty() == 0);
+
+//copy constructor
+    Sequence b(a);
+
+    Sequence c;
+    assert(c.empty() == 1);
+
+//= operator overload test
+    c = a;
+    Sequence d;
+    assert(d.empty() == 1);
+    b = d;
+    c = d;
+    assert(c.empty() == 1);
+    assert(b.empty() == 1);
+
+    b.insert( 1, 1);
+    b.insert( 0, 1);
+    b.insert( 1, 3);
+    b.insert( 1, 2);
+
+    x = 500;
+    assert(b.get(-1,x) == 0 && x == 500);
+    assert(b.get(4,x) == 0 && x == 500);
+
+    assert(b.get(0,x) == 1 && x == 1);
+    assert(b.get(1,x) == 1 && x == 2);
+    assert(b.get(2,x) == 1 && x == 3);
+    assert(b.get(3,x) == 0 && x == 3);
+
+    assert(b.size() == 3);
+    assert(b.empty() == 0 && c.empty() == 1 && d.empty() == 1);
+
+    c.insert(0, 10);
+    c.insert(1, 20);
+    assert(c.size() == 2 && c.empty() == 0);
+//test swap
+    b.swap(c);
+    x = 100;
+    assert(c.get(-1, x) == 0 && x == 100);
+    assert(c.get(3, x) == 0 && x == 100);
+    assert(c.get(0, x) == 1 && x == 1);
+    assert(c.get(1, x) == 1 && x == 2);
+    assert(c.get(2, x) == 1 && x == 3);
+    x = 100;
+    assert(b.get(-1, x) == 0 && x == 100);
+    assert(b.get(2, x) == 0 && x == 100);
+    assert(b.get(0, x) == 1 && x == 10);
+    assert(b.get(1, x) == 1 && x == 20);
+
+//test one condition insert
+    x = 100;
+    assert(d.empty() == 1);
+    d.insert(10);
+    assert(d.get(0, x) == 1 && x == 10);
+    d.insert(20);
+    assert(d.get(1, x) == 1 && x == 20);
+    d.insert(15);
+    assert(d.get(1, x) == 1 && x == 15);
+    d.insert(30);
+    assert(d.get(3, x) == 1 && x == 30);
+    d.insert(1);
+    assert(d.get(0, x) == 1 && x == 1);
+
+
+//    a 1,2,3,420,4,5,6,7,555
+//    b 10,20
+//    c 1,2,3
+//    d 1,10,15,20,30
+
+//test set
+    assert(a.set(-1 , 10) == 0);
+    assert(a.set(9  , 10) == 0);
+    assert(a.set(0  , 10) == 1);
+    assert(a.set(8  , 111) == 1);
+    x = 100;
+    assert(a.get(0, x) == 1 && x == 10);
+    assert(a.get(1, x) == 1 && x == 2);
+    assert(a.get(7, x) == 1 && x == 7);
+    assert(a.get(8, x) == 1 && x == 111);
+    a.set( 0 , 10);
+    a.set( 1 , 20);
+    a.set( 2 , 30);
+    a.set( 3 , 40);
+    a.set( 4 , 50);
+    a.set( 5 , 60);
+    a.set( 6 , 70);
+    a.set( 7 , 80);
+    a.set( 8 , 90);
+//    a 10,20,30,40,50,60,70,80,90
+
+//test erase
+//shouldn't change the size if its out of bounds
+    assert(a.erase(-1) == 0);
+    assert(a.erase(9) == 0);
+    assert(a.size() == 9);
+
+//erase at the middle
+    assert(a.erase(4) == 1);
+//    a 10,20,30,40,60,70,80,90
+    assert(a.size() == 8);
+    x = 500;
+    assert(a.get(4, x) == 1 && x==60);
+    assert(a.get(3, x) == 1 && x==40);
+    assert(a.get(5, x) == 1 && x==70);
+
+//erase at the end
+    assert(a.erase(7) == 1);
+//  a 10,20,30,40,60,70,80
+    assert(a.get(7,x) == 0);
+    assert(a.get(6,x) == 1 && x == 80);
+    assert(a.size() == 7);
+
+//erase at beginning
+    assert(a.erase(0) == 1);
+//  a 20,30,40,60,70,80
+    assert(a.get(0, x) == 1 && x == 20);
+    assert(a.get(6, x) == 0 && x == 20);
+    assert(a.get(5, x) == 1 && x == 80);
+    assert(a.size() == 6);
+    a.erase(0);
+    a.erase(0);
+    a.erase(0);
+    a.erase(0);
+    a.erase(0);
+    assert(a.size() == 1);
+    a.erase(0);
+    assert(a.empty() == 1);
+    assert(a.size() == 0);
+    a.insert(10);
+    a.insert(9);
+    a.insert(4);
+    a.insert(8);
+    a.insert(8);
+
+
+//test remove
+    assert(a.remove(8) == 2);
+    assert(a.get(0, x) == 1 && x == 4);
+    assert(a.get(1, x) == 1 && x == 9);
+    assert(a.get(2, x) == 1 && x == 10);
+    assert(a.size() == 3);
+    assert(a.empty() == 0);
+
+    a.erase(0);
+    a.erase(0);
+    a.erase(0);
+
+    a.insert(22);
+    a.insert(22);
+    a.insert(22);
+    a.insert(22);
+    assert(a.remove(10) == 0);
+    assert(a.remove(22) == 4);
+    assert(a.remove(22) == 0);
+    assert(a.size() == 0 && a.empty() == 1);
+
+    // a empty
+    // b 10,20
+    // c 1,2,3
+    //d 1,10,15,20,30
+
+    a.insert(2);
+//test subsequence
+    assert(subsequence(c, a) == 1);
+    a.insert(3);
+    b = a;
+    assert(subsequence(c, a) == 1);
+    assert(subsequence(c, b) == 1);
+    assert(subsequence(c, d) == -1);
+    assert(subsequence(a, a) == 0);
+    assert(subsequence(a, b) == 0);
+    assert(subsequence(b, a) == 0);
+    assert(subsequence(d, c) == -1);
+    d.insert(4,1);
+    d.insert(5,2);
+    d.insert(6,3);
+    assert(subsequence(d, c) == 4);
+    
+// a 2,3
+// b 2,3
+// c 1,2,3
+// d 1,10,15,20,1,2,3,30
+    
+    assert(d.find(400) == -1);
+    assert(d.find(30) == 7);
+    assert(d.find(15) == 2);
+    assert(d.find(1) == 0);
+
+//test interleave
+    interleave(a, c, b);
+    assert(b.size() == a.size() + c.size());
+
+// b 2,1,3,2,3
+
+    x = 500;
+    assert(a.get(0, x) == 1 && x == 2);
+    assert(c.get(0, x) == 1 && x == 1);
+    
+    assert(b.get(0, x) == 1 && x == 2);
+    assert(b.get(1, x) == 1 && x == 1);
+    assert(b.get(2, x) == 1 && x == 3);
+    assert(b.get(3, x) == 1 && x == 2);
+    assert(b.get(4, x) == 1 && x == 3);
+    assert(b.get(5, x) == 0 && x == 3);
+    
+    interleave(a, c , a);
+    assert(a.size() == 5);
+    assert(a.get(0, x) == 1 && x == 2);
+    assert(a.get(1, x) == 1 && x == 1);
+    assert(a.get(2, x) == 1 && x == 3);
+    assert(a.get(3, x) == 1 && x == 2);
+    assert(a.get(4, x) == 1 && x == 3);
+    assert(a.get(5, x) == 0 && x == 3);
+    return 0;
+}

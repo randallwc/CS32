@@ -1,0 +1,133 @@
+William Randall
+UID 805167986
+
+2. 
+It doesn't compile because in the Coord class there is no operator "<" overload.  This is important because in the insert with only one argument it inserts the object in a place such that value <= the item at that position in the sequence, so it must constantly check the value of the object in the loop to find the correct place to put the object.  This wouldn't cause a compilation error for a class that overloaded its "<" operator.
+
+4b.
+We couldn't solve this problem with the one parameter list all because we needed to store the values from the branch of the tree so we can print them in the order from root to tree for each branch.  If we didn't have the second parameter then we wouldn't be able to correctly order the '.' character in the address and we wouldn't be able to output the entire address.  Also, in recursive functions you cannot initialize a variable inside of each recursive call or else it will reset each time the function is called recursively.
+
+5a.
+const int N = some value;---->O(1)
+bool isFriend[N][N];---->O(1)
+...
+int numMutualFriends[N][N];---->O(1)
+for (int i = 0; i < N; i++)---->O(N)
+{
+    numMutualFriends[i][i] = -1;  // the concept of mutual friend---->O(1)
+			          // makes no sense in this case
+    for (int j = 0; j < N; j++)---->O(N)
+    {
+        if (i == j)---->O(1)
+            continue;---->O(1)
+        numMutualFriends[i][j] = 0;---->O(1)
+        for (int k = 0; k < N; k++)---->O(N)
+        {
+            if (k == i  ||  k == j)---->O(1)
+                continue;---->O(1)
+	    if (isFriend[i][k]  &&  isFriend[k][j])---->O(1)
+        	numMutualFriends[i][j]++;---->O(1)
+        }
+    }
+}
+N*N*N = N^3
+This is because the worst case for this to run is if all for loops run for N times.
+Anser:	O(N^3)
+
+5b.
+const int N = some value;---->O(1)
+bool isFriend[N][N];---->O(1)
+...
+int numMutualFriends[N][N];---->O(1)
+for (int i = 0; i < N; i++)---->O(N)
+{
+    numMutualFriends[i][i] = -1;  	// the concept of mutual friend---->O(1)
+			          				// makes no sense in this case
+    for (int j = 0; j < i; j++)   	// loop limit is now i, not N---->O(N)
+    {
+        numMutualFriends[i][j] = 0;---->O(1)
+        for (int k = 0; k < N; k++)---->O(N)
+        {
+            if (k == i  ||  k == j)---->O(1)
+                continue;
+	    if (isFriend[i][k]  &&  isFriend[k][j])---->O(1)
+        	numMutualFriends[i][j]++;---->O(1)
+        }
+        numMutualFriends[j][i] = numMutualFriends[i][j];---->O(1)
+    }
+}
+N*N*N = N^3
+This is because the worst case for this to run is if all for loops run for N times even if the second for loop only goes up to i.  This is because the max value for i is N, so the time complexity is the same.
+Answer:  O(N^3)
+
+6a.
+
+void interleave(const Sequence& seq1, const Sequence& seq2, Sequence& result)
+{
+    Sequence res;------------------------------------>O(1)
+
+    int n1 = seq1.size();---------------------------->O(1)
+    int n2 = seq2.size();---------------------------->O(1)
+    int nmin = (n1 < n2 ? n1 : n2);------------------>O(1)
+    int resultPos = 0;------------------------------->O(1)
+    for (int k = 0; k < nmin; k++)------------------->O(N)
+    {
+        ItemType v;---------------------------------->O(1)
+        seq1.get(k, v);------------------------------>O(N/2)
+        res.insert(resultPos, v);-------------------->O(N/2)
+        resultPos++;--------------------------------->O(1)
+        seq2.get(k, v);------------------------------>O(N/2)
+        res.insert(resultPos, v);-------------------->O(N/2)
+        resultPos++;--------------------------------->O(1)
+    }
+
+    const Sequence& s = (n1 > nmin ? seq1 : seq2);--->O(N)
+    int n = (n1 > nmin ? n1 : n2);------------------->O(1)
+    for (int k = nmin ; k < n; k++)------------------>O(N)
+    {
+        ItemType v;---------------------------------->O(1)
+        s.get(k, v);--------------------------------->O(N/2)
+        res.insert(resultPos, v);-------------------->O(N/2)
+        resultPos++;--------------------------------->O(1)
+    }
+    result.swap(res);-------------------------------->O(1)
+}
+
+N(4*N/2) = 2N^2 
+N(2N/2) = N^2
+
+2N^2 + N^2 + N= 3N^2 + N
+
+We have 2N^2 but we disregard the coefficients.  We got these n values because the get function and the insert function used both have a time complexity of N/2 when we look at the Sequence.cpp.  And there are two for loops that each loop N times and we take both and add up the N values inside of them and multiply them by the loop's complexity of N.  Then we add the time complexities of the for loops and the complexity of the copy constructor and take the N to the highest power and remove the coefficient.
+
+Answer: O(N^2)
+
+6b.
+
+void Sequence::interleave(const Sequence& seq1, const Sequence& seq2)
+{
+    Sequence res;------------------------------------------------------------------------------->O(1)
+
+    Node* p1 = seq1.m_head->m_next;------------------------------------------------------------->O(1)
+    Node* p2 = seq2.m_head->m_next;------------------------------------------------------------->O(1)
+    for ( ; p1 != seq1.m_head  &&  p2 != seq2.m_head; p1 = p1->m_next, p2 = p2->m_next)--------->O(N)
+    {
+        res.insertBefore(res.m_head, p1->m_value);---------------------------------------------->O(1)
+        res.insertBefore(res.m_head, p2->m_value);---------------------------------------------->O(1)
+    }
+
+    Node* p    = (p1 != seq1.m_head ? p1 : p2);------------------------------------------------->O(1)
+    Node* pend = (p1 != seq1.m_head ? seq1 : seq2).m_head;-------------------------------------->O(1)
+    for ( ; p != pend; p = p->m_next)----------------------------------------------------------->O(N)
+        res.insertBefore(res.m_head, p->value);------------------------------------------------->O(1)
+
+      // Swap *this with res
+    swap(res);---------------------------------------------------------------------------------->O(1)
+      // Old value of *this (now in res) is destroyed when function returns.
+}
+
+2*N = 2N
+
+Each for loop runs N times so 2N is the overall time complexity but we drop the coefficient so the time complexity is N.
+
+Answer: O(N)

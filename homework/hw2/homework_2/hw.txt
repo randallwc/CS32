@@ -1,0 +1,38 @@
+William Randall
+Homework 2
+May 1, 2019
+UID 805167986
+
+Problem #2
+
+1 -  (3,5)
+2 -  (3,6)
+3 -  (3,4)
+4 -  (2,4)
+5 -  (1,4)
+6 -  (1,3)
+7 -  (1,2)
+8 -  (1,1)
+9 -  (2,1)
+10 - (3,3)
+11 - (4,5)
+12 - (5,5)
+
+Problem #4
+
+1 - (3,5)
+2 - (4,5)
+3 - (3,4)
+4 - (3,6)
+5 - (5,5)
+6 - (3,3)
+7 - (2,4)
+8 - (6,5)
+9 - (5,4)
+10 - (1,4)
+11 - (7,5)
+12 - (5,3)
+
+How do the two algorithms differ from each other? (Hint: how and why do they visit cells in the maze in a different order?)
+
+The stack algorithm pushes discovered coordinates onto the stack and pops off the last added position to check for more discoverable coordinates.  While the queue algorithm pushes discovered coordinates onto the queue and then pops off the first added coordinate to check it for more discoverable coordinates.  In summary the stack pops off from the top, the most recently added, of its data, and queue pops off the front, the first added, of its data to check it for more discoverable coordinates.  Stack is a depth-first search and queue is a breadth-first search.  This means stack will follow one direction to search for possible solutions while queue would check all values around it to check for solutions.
